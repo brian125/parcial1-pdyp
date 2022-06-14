@@ -8,6 +8,8 @@ const Header = ({
   setPresupuesto,
   isValidPresupuesto,
   setIsValidPresupuesto,
+  disponible,
+  setDisponible,
 }) => {
   return (
     <>
@@ -15,7 +17,12 @@ const Header = ({
         <img className="icon" src="../img/icon.png" alt="Logo" />
         <h1 className="title"> PLANIFICADOR DE GASTOS </h1>
         {isValidPresupuesto ? (
-          <ControlPresupuesto registros={registros} presupuesto={presupuesto} />
+          <ControlPresupuesto
+            registros={registros}
+            presupuesto={presupuesto}
+            disponible={disponible}
+            setDisponible={setDisponible}
+          />
         ) : (
           <NuevoPresupuesto
             presupuesto={presupuesto}

@@ -8,7 +8,8 @@ const Modal = ({
   setAnimarModal,
   guardarRegistro,
   registroEditar,
-  setRegistroEditar
+  setRegistroEditar,
+  disponible
 }) => {
   const [nombre, setNombre] = useState("");
   const [cantidad, setCantidad] = useState("");
@@ -45,7 +46,20 @@ const Modal = ({
       }, 3000);
       return;
     }
-
+    if (cantidad < 0) {
+      setMensaje("La cantidad no puede ser menor a 0");
+      setTimeout(() => {
+        setMensaje("");
+      }, 3000);
+      return;
+    }
+    if (disponible < cantidad && categoria == 'egreso') {
+      setMensaje("No cuenta con saldo suficiente.");
+      setTimeout(() => {
+        setMensaje("");
+      }, 3000);
+      return;
+    }
     guardarRegistro({ nombre, cantidad, categoria, id, fecha });
   };
 
@@ -89,7 +103,7 @@ const Modal = ({
             onChange={(e) => setCategoria(e.target.value)}
           >
             <option value="">-- Seleccione --</option>
-            <option value="egreso">Egreso</option>
+            {disponible > 0 ? <option value="egreso">Egreso</option> : registroEditar.categoria = ''}
             <option value="ingreso">Ingreso</option>
           </select>
         </div>

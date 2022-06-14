@@ -17,7 +17,7 @@ const diccionarioIconos = {
   egreso: IconoEgreso,
 };
 
-const Registro = ({ registro, setRegistroEditar, eliminarRegistro }) => {
+const Registro = ({ registro, setRegistroEditar, eliminarRegistro, disponible }) => {
   const { categoria, nombre, cantidad, id, fecha } = registro;
 
   const leadingActions = () => (

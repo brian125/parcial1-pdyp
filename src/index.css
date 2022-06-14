@@ -451,3 +451,10 @@ body .modal {
     margin: auto;
     margin-top: 180px;
 }
+
+p.negativo,
+p.negativo span {
+    font-size: 25px;
+    color: red;   
+    margin: 25px 0px;
+}

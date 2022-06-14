@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-const ControlPresupuesto = ({ registros, presupuesto }) => {
-  const [disponible, setDisponible] = useState(presupuesto);
+const ControlPresupuesto = ({ registros, presupuesto, disponible, setDisponible }) => {
+  
   const [porcentaje, setPorcentaje] = useState(100);
   let actual = presupuesto;
 
@@ -16,10 +16,6 @@ const ControlPresupuesto = ({ registros, presupuesto }) => {
         actual = actual - registro.cantidad;
       }
       let nuevoPorcentaje = ((actual / presupuesto) *100).toFixed(2);
-      // if (nuevoPorcentaje < 0) {
-      //   console.log(nuevoPorcentaje);
-      //   nuevoPorcentaje = nuevoPorcentaje - nuevoPorcentaje
-      // }
       setTimeout(() => {
         setPorcentaje(nuevoPorcentaje);
       }, 1000);
@@ -53,7 +49,7 @@ const ControlPresupuesto = ({ registros, presupuesto }) => {
           <span className="info-tile">Saldo inicial: </span>{" "}
           {formatearCantidad(presupuesto)}
         </p>
-        <p className="info-cash">
+        <p className={`${disponible <= 0 ? 'negativo' : 'info-cash'}`}>
           <span className="info-tile">Saldo final: </span>{" "}
           {formatearCantidad(disponible)}
         </p>

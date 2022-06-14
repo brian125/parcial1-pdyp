@@ -17,15 +17,21 @@ function App() {
   const [animarModal, setAnimarModal] = useState(false);
 
   const [registros, setRegistros] = useState(
-    localStorage.getItem('registros')
-      ? JSON.parse(localStorage.getItem('registros'))
+    localStorage.getItem("registros")
+      ? JSON.parse(localStorage.getItem("registros"))
       : []
   );
 
   const [registroEditar, setRegistroEditar] = useState({});
 
-  const [filtroCategoria, setFiltroCategoria] = useState('');
-  const [registrosFiltradosCategoria, setRegistrosFiltradosCategoria] = useState([]);
+  const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [registrosFiltradosCategoria, setRegistrosFiltradosCategoria] =
+    useState([]);
+
+  const [filtroNombre, setFiltroNombre] = useState("");
+  const [registrosFiltradosNombre, setRegistrosFiltradosNombre] = useState([]);
+
+  const [disponible, setDisponible] = useState(presupuesto);
 
   useEffect(() => {
     if (Object.keys(registroEditar).length > 0) {
@@ -37,11 +43,22 @@ function App() {
   }, [registroEditar]);
 
   useEffect(() => {
-    if (filtroCategoria){
-      const registrosFiltrados = registros.filter( registro => registro.categoria === filtroCategoria )
-      setRegistrosFiltradosCategoria(registrosFiltrados)
+    if (filtroCategoria) {
+      const registrosFiltrados = registros.filter(
+        (registro) => registro.categoria === filtroCategoria
+      );
+      setRegistrosFiltradosCategoria(registrosFiltrados);
     }
-  }, [filtroCategoria])
+  }, [filtroCategoria]);
+
+  useEffect(() => {
+    if (filtroNombre) {
+      const registrosFiltrados = registros.filter(
+        (registro) => registro.nombre.toLowerCase().includes(filtroNombre.toLowerCase())
+      );
+      setRegistrosFiltradosNombre(registrosFiltrados);
+    }
+  }, [filtroNombre]);
 
   useEffect(() => {
     localStorage.setItem("presupuesto", presupuesto ?? 0);
@@ -86,6 +103,12 @@ function App() {
   };
 
   const eliminarRegistro = (id) => {
+    const registroAEliminar = registros.filter(registro => registro.id === id);
+    console.log("El registro que se elimina", registroAEliminar);
+    if (registroAEliminar[0].categoria == 'ingreso' && registroAEliminar.cantidad[0] > disponible) {
+      setRegistros(registros)
+      return;
+    }
     const registrosActualizados = registros.filter(
       (registro) => registro.id !== id
     );
@@ -100,15 +123,27 @@ function App() {
         setPresupuesto={setPresupuesto}
         isValidPresupuesto={isValidPresupuesto}
         setIsValidPresupuesto={setIsValidPresupuesto}
+        disponible={disponible}
+        setDisponible={setDisponible}
       />
       {isValidPresupuesto && (
         <>
           <main>
-            <Filtros filtro={filtroCategoria} setFiltroCategoria={setFiltroCategoria}/>
+            <Filtros
+              filtroCategoria={filtroCategoria}
+              setFiltroCategoria={setFiltroCategoria}
+              filtroNombre={filtroNombre}
+              setFiltroNombre={setFiltroNombre}
+            />
             <ListadoRegistros
+              registrosFiltradosCategoria={registrosFiltradosCategoria}
+              filtroCategoria={filtroCategoria}
+              registrosFiltradosNombre={registrosFiltradosNombre}
+              filtroNombre={filtroNombre}
               registros={registros}
               setRegistroEditar={setRegistroEditar}
               eliminarRegistro={eliminarRegistro}
+              disponible={disponible}
             />
           </main>
           <div className="nuevo-gasto">
@@ -129,6 +164,7 @@ function App() {
           guardarRegistro={guardarRegistro}
           registroEditar={registroEditar}
           setRegistroEditar={setRegistroEditar}
+          disponible={disponible}
         />
       )}
     </div>
